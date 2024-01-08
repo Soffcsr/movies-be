@@ -2,12 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genre;
 use App\Models\Movie;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
+use App\Models\MovieGenre;
+use App\Repositories\IGenreRepository;
+use App\Repositories\IListRepository;
+use App\Repositories\IMovieRepository;
 
 class MovieController extends Controller
 {
+    private $_genreRepository = null;
+    private $_movieRepository = null;
+    private $_listRepository = null;
+
+    public function __construct(IGenreRepository $genreRepository, IMovieRepository $movieRepository, IListRepository $listRepository)
+    {
+        $this->_genreRepository = $genreRepository;
+        $this->_movieRepository = $movieRepository;
+        $this->_listRepository = $listRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,7 +45,9 @@ class MovieController extends Controller
      */
     public function store(StoreMovieRequest $request)
     {
-        //
+        $genreid = $this->_genreRepository->SaveGenre($request->genre);
+        $movie = $this->_movieRepository->SaveMovie($request, $genreid);
+        return $this->_listRepository->AddNewToWatch($movie->id, 1);
     }
 
     /**

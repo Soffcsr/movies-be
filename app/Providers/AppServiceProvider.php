@@ -11,7 +11,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind('App\Repositories\IMovieRepository', 'App\Repositories\MovieRepository');
+        $this->app->bind('App\Repositories\IGenreRepository', 'App\Repositories\GenreRepository');
+        $this->app->bind('App\Repositories\IListRepository', 'App\Repositories\ListRepository');
     }
 
     /**
